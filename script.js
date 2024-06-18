@@ -1,14 +1,11 @@
-let humanScore = 0;
-let computerScore = 0;
-
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
 function getComputerChoice() {
-    let choice = getRandomInt(3);
+    let computerChoice = getRandomInt(3);
 
-    switch (choice) {
+    switch (computerChoice) {
         case 0:
             return "Rock";
         case 1:
@@ -18,12 +15,10 @@ function getComputerChoice() {
     }
 }
 
-console.log(getComputerChoice());
-
 function getHumanChoice() {
-    let input = prompt("Rock, Paper or Scissors?");
+    let humanChoice = prompt("Rock, Paper or Scissors?");
 
-    switch (input.toLowerCase()) {
+    switch (humanChoice.toLowerCase()) {
         case "rock":
             return "Rock";
         case "paper":
@@ -31,50 +26,68 @@ function getHumanChoice() {
         case "scissors":
             return "Scissors";
     }
+    return getHumanChoice();
 }
 
-console.log(getHumanChoice());
+function playGame() {
+    let humanScore = 0;
+    let computerScore = 0;
 
-function playRound(humanChoice, computerChoice) {
-    if (humanChoice === computerChoice) {
-        return "Tie!";
+    function playRound(humanChoice, computerChoice) {
+        if (humanChoice === computerChoice) {
+            return "Tie!";
+        }
+        else if (humanChoice === "Rock") {
+            if (computerChoice === "Scissors") {
+                humanScore++;
+                return "You Win! Rock beats Scissors.";
+            }
+            else {
+                computerScore++;
+                return "You Lose! Paper beats Rock.";
+            }
+        }
+        else if (humanChoice === "Paper") {
+            if (computerChoice === "Rock") {
+                humanScore++;
+                return "You Win! Paper beats Rock.";
+            }
+            else {
+                computerScore++;
+                return "You Lose! Scissors beats Paper.";
+            }
+        }
+        else if (humanChoice === "Scissors") {
+            if (computerChoice === "Paper") {
+                humanScore++;
+                return "You Win! Scissors beats Paper.";
+            }
+            else {
+                computerScore++;
+                return "You Lose! Rock beats Scissors.";
+            }
+        }
+        else return "Invalid choice. Please try again!";
     }
-    else if (humanChoice === "Rock") {
-        if (computerChoice === "Scissors") {
-            humanScore++;
-            return "You Win! Rock beats Scissors.";
-        }
-        else {
-            computerScore++;
-            return "You Lose! Paper beats Rock.";
-        }
+    
+    const humanSelection = getHumanChoice();
+    const computerSelection = getComputerChoice();
+    
+    playRound(humanSelection, computerSelection);
+
+    for (let i = 0; i < 5; i++) {
+        const humanSelection = getHumanChoice();
+        const computerSelection = getComputerChoice();
+    
+        const roundResult = playRound(humanSelection, computerSelection);
+        console.log(roundResult);
     }
-    else if (humanChoice === "Paper") {
-        if (computerChoice === "Rock") {
-            humanScore++;
-            return "You Win! Paper beats Rock.";
-        }
-        else {
-            computerScore++;
-            return "You Lose! Scissors beats Paper.";
-        }
+
+    if (humanScore > computerScore) {
+        console.log("You Win! Congratulations!");
     }
-    else if (humanChoice === "Scissors") {
-        if (computerChoice === "Paper") {
-            humanScore++;
-            return "You Win! Scissors beats Paper.";
-        }
-        else {
-            computerScore++;
-            return "You Lose! Rock beats Scissors.";
-        }
+    else if (humanScore < computerScore) {
+        console.log("You Lose! Better luck next time.");
     }
-    else return "Invalid choice. Please try again!";
+    else console.log("It's a tie!");
 }
-
-console.log(playRound());
-
-const humanSelection = getHumanChoice();
-const computerSelection = getComputerChoice();
-
-playRound(humanSelection, computerSelection);
