@@ -15,79 +15,54 @@ function getComputerChoice() {
     }
 }
 
-function getHumanChoice() {
-    let humanChoice = prompt("Rock, Paper or Scissors?");
+let playerScore = 0;
+let computerScore = 0;
 
-    switch (humanChoice.toLowerCase()) {
-        case "rock":
-            return "Rock";
-        case "paper":
-            return "Paper";
-        case "scissors":
-            return "Scissors";
+function playRound(playerSelection) {
+    const computerSelection = getComputerChoice(); // Get computer's choice
+    let resultMessage = '';
+
+    // Determine the winner
+    if (playerSelection === computerSelection) {
+        resultMessage = "It's a tie!";
+    } else if (
+        (playerSelection === "Rock" && computerSelection === "Scissors") ||
+        (playerSelection === "Paper" && computerSelection === "Rock") ||
+        (playerSelection === "Scissors" && computerSelection === "Paper")
+    ) {
+        playerScore++;
+        resultMessage = `You Win! ${playerSelection} beats ${computerSelection}.`;
+    } else {
+        computerScore++;
+        resultMessage = `You Lose! ${computerSelection} beats ${playerSelection}.`;
     }
-    return getHumanChoice();
+
+    // Update the result and score in the DOM
+    document.getElementById('results').innerText = resultMessage;
+    updateScore();
 }
 
-function playGame() {
-    let humanScore = 0;
-    let computerScore = 0;
+// Add event listeners to buttons
+document.getElementById('rockButton').addEventListener('click', () => playRound('Rock'));
+document.getElementById('paperButton').addEventListener('click', () => playRound('Paper'));
+document.getElementById('scissorsButton').addEventListener('click', () => playRound('Scissors'));
 
-    function playRound(humanChoice, computerChoice) {
-        if (humanChoice === computerChoice) {
-            return "Tie!";
-        }
-        else if (humanChoice === "Rock") {
-            if (computerChoice === "Scissors") {
-                humanScore++;
-                return "You Win! Rock beats Scissors.";
-            }
-            else {
-                computerScore++;
-                return "You Lose! Paper beats Rock.";
-            }
-        }
-        else if (humanChoice === "Paper") {
-            if (computerChoice === "Rock") {
-                humanScore++;
-                return "You Win! Paper beats Rock.";
-            }
-            else {
-                computerScore++;
-                return "You Lose! Scissors beats Paper.";
-            }
-        }
-        else if (humanChoice === "Scissors") {
-            if (computerChoice === "Paper") {
-                humanScore++;
-                return "You Win! Scissors beats Paper.";
-            }
-            else {
-                computerScore++;
-                return "You Lose! Rock beats Scissors.";
-            }
-        }
-        else return "Invalid choice. Please try again!";
-    }
-    
-    const humanSelection = getHumanChoice();
-    const computerSelection = getComputerChoice();
-    
-    playRound(humanSelection, computerSelection);
+function updateScore() {
+    const scoreDisplay = `Player: ${playerScore} - Computer: ${computerScore}`;
+    document.getElementById('score').innerText = scoreDisplay;
 
-    for (let i = 0; i < 5; i++) {
-        const humanSelection = getHumanChoice();
-        const computerSelection = getComputerChoice();
-    
-        const roundResult = playRound(humanSelection, computerSelection);
-        console.log(roundResult);
+    // Check for a winner
+    if (playerScore === 5) {
+        alert("Congratulations! You are the champion!");
+        resetGame();
+    } else if (computerScore === 5) {
+        alert("The computer wins! Better luck next time.");
+        resetGame();
     }
+}
 
-    if (humanScore > computerScore) {
-        console.log("You Win! Congratulations!");
-    }
-    else if (humanScore < computerScore) {
-        console.log("You Lose! Better luck next time.");
-    }
-    else console.log("It's a tie!");
+function resetGame() {
+    playerScore = 0;
+    computerScore = 0;
+    updateScore(); // Reset the score display
 }
